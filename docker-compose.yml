@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: db_postgres
+    restart: always
+    networks:
+      - valid_network
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    networks:
+      - valid_network
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672" # UI management
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1
+    container_name: keycloak
+    command: start-dev
+    restart: always
+    networks:
+      - valid_network
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
+
+networks:
+  valid_network:
+    external: true
