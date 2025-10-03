@@ -52,9 +52,9 @@ Add to ID Token: ON (Ligado)
 
 ### API (.NET 8)
 - [x] Configurar JWT Bearer com Keycloak
-- [ ] Implementar endpoints Clientes (CRUD)
-- [ ] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
-- [ ] Implementar endpoint PUT para status via procedure
+- [x] Implementar endpoints Clientes (CRUD)
+- [x] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
+- [x] Implementar endpoint PUT para status via procedure
 - [ ] Testes unitários (mínimo 10)
 - [ ] Testes de integração (mínimo 5)
 - [ ] Healthcheck e Swagger

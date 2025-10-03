@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Api.Configuration;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +31,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Autorização
 builder.Services.AddAuthorization();
 
+
+
+
+
 // Controllers
 builder.Services.AddControllers();
+
+// DI
+builder.Services.AddDependencys();
 
 // Swagger com suporte a JWT
 builder.Services.AddEndpointsApiExplorer();
@@ -80,6 +90,8 @@ app.UseHttpsRedirection();
 // Autenticação e autorização
 app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 app.MapHealthChecks("/health");
