@@ -7,9 +7,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["Authentication:Authority"]; 
-        options.Audience = builder.Configuration["Authentication:Audience"]; 
-        options.RequireHttpsMetadata = false; // cuidado em produção
+        
+        options.Authority = builder.Configuration["Keycloak:Authority"];
+        options.Audience = builder.Configuration["Keycloak:ClientId"];
+        Console.WriteLine($"Auth: {options.Authority}");
+        Console.WriteLine($"Audience: {options.Audience}");
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                                            {
+                                                ValidateAudience = true,
+                                                ValidateIssuer = true,
+                                                ValidateLifetime = true,
+                                                ValidateIssuerSigningKey = true
+                                            };
+        options.TokenValidationParameters.RoleClaimType = "roles";
+
+        
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment(); 
     });
 
 // Autorização
@@ -31,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Insira o token JWT (sem 'Bearer ' prefixado)."
+        Description = "Insira o token JWT sem o prefixo 'Bearer '."
     };
 
     c.AddSecurityDefinition("Bearer", securityScheme);

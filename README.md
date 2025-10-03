@@ -18,6 +18,19 @@ Este repositório contém a POC para do teste técnico de um sistema WinForms le
 ## Estrutura do Projeto
 
 
+## SETUP
+### KeyCloak
+Setup necessário para execução local
+- **Realm** - crie um novo realm chamado valid
+- **Client** - Crie um cliente chamado valid-api
+-- configure Clients>valid-api>Client Scopes>valid_api_dedicated>add mapper (By configuration):
+Name: Valid Client Audience
+Mapper Type: Audience
+Included Client Audience: valid-api (Seu Client ID)
+Add to Access Token: ON (Ligado)
+Add to ID Token: ON (Ligado)
+
+
 ## ✅ Checklist do Projeto - Desafio Técnico
 
 ### Estrutura e setup
@@ -38,7 +51,7 @@ Este repositório contém a POC para do teste técnico de um sistema WinForms le
 - [x] Scripts de seed/teste
 
 ### API (.NET 8)
-- [ ] Configurar JWT Bearer com Keycloak
+- [x] Configurar JWT Bearer com Keycloak
 - [ ] Implementar endpoints Clientes (CRUD)
 - [ ] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
 - [ ] Implementar endpoint PUT para status via procedure
@@ -71,3 +84,10 @@ Este repositório contém a POC para do teste técnico de um sistema WinForms le
 ### CI/CD
 - [ ] Pipeline GitHub Actions (build, testes, lint)
 - [ ] Deploy/local docker dev
+
+### PLUS - Publish the project
+- [ ] Publish the Base Infra - compose infra
+- [ ] Publish API
+- [ ] Publish Front
+- [ ] Publish Worker
+ 
