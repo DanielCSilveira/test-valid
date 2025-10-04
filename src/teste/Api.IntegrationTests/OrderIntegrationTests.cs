@@ -56,7 +56,7 @@ namespace Api.IntegrationTests
 
             Assert.NotNull(customer);
 
-      
+
             var newOrder = new OrderCreateDto() { CustomerId = customer.Id, Amount = 70 };
             var responsePost = await client.PostAsJsonAsync($"/api/orders", newOrder);
 
@@ -69,6 +69,33 @@ namespace Api.IntegrationTests
                 Times.Once
             );
 
+        }
+
+
+        /// <summary>
+        /// POC exclusive, publish on rabbitMq, direct to test 
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task PublishMessageOnQueue_CreateOrder_returnCreated()
+        {
+            var token = await JwtTokenHelper.GenerateValidToken(_config);
+
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            //for test porpoise, get first customer to use
+            var responseGet = await _client.GetAsync($"/api/customers/");
+            var customers = await responseGet.Content.ReadFromJsonAsync<IEnumerable<CustomerDto>>();
+            var customer = customers?.First();
+
+            Assert.NotNull(customer);
+
+
+            var newOrder = new OrderCreateDto() { CustomerId = customer.Id, Amount = 70 };
+            var responsePost = await _client.PostAsJsonAsync($"/api/orders", newOrder);
+            
+            responsePost.StatusCode.Should().Be(HttpStatusCode.Created);
         }
 
         [Fact]

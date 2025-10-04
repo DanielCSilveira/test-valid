@@ -37,14 +37,7 @@ namespace Application.Services
             _connection = await _factory.CreateConnectionAsync();
             _channel = await _connection.CreateChannelAsync();
 
-            // garante que a fila existe
-            await _channel.QueueDeclareAsync(
-                queue: "default",
-                durable: true,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null
-            );
+      
         }
 
         public async Task PublishAsync(string queue, object data)
@@ -65,6 +58,14 @@ namespace Application.Services
                 ContentType = "application/json",
                 DeliveryMode = DeliveryModes.Persistent 
             };
+            // garante que a fila existe
+            await _channel.QueueDeclareAsync(
+                queue: queue,
+                durable: true,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+            );
 
             await _channel.BasicPublishAsync<BasicProperties>(
                 exchange: "",

@@ -32,7 +32,7 @@ namespace Application.Services
                 throw new Exception("Ocorreu um erro durante a inserção do pedido");
             }
 
-            await _rabbit.PublishAsync("new_orders", new { id = id });
+            await _rabbit.PublishAsync("new_orders", inserted);
 
             return inserted;
         }
