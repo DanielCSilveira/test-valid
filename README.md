@@ -55,7 +55,7 @@ Add to ID Token: ON (Ligado)
 - [x] Implementar endpoints Clientes (CRUD)
 - [x] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
 - [x] Implementar endpoint PUT para status via procedure
-- [ ] Testes unitários (mínimo 10)
+- [x] Testes unitários (mínimo 10)
 - [ ] Testes de integração (mínimo 5)
 - [ ] Healthcheck e Swagger
 

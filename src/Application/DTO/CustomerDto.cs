@@ -16,6 +16,7 @@ namespace Application.DTO
     public class CustomerCreateOrUpdateDto
     {
         [Required(ErrorMessage = "O nome é obrigatório.")]
+        [MinLength(2, ErrorMessage = "O nome não pode ser vazio.")]
         [StringLength(100, ErrorMessage = "O nome deve ter no máximo 100 caracteres.")]
         public required string Name { get; set; }
 
