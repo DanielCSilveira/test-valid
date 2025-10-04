@@ -1,0 +1,49 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore src/ValidSolution.sln
+      
+    - name: Build
+      run: dotnet build src/ValidSolution.sln --configuration Release --no-restore
+      
+    - name: Run Unit Tests - Api.Tests
+      run: dotnet test src/teste/Api.Tests/Api.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=api-tests.trx"
+      
+    - name: Run Unit Tests - Application.Tests
+      run: dotnet test src/teste/Application.Tests/Application.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=application-tests.trx"
+      
+    - name: Run Unit Tests - Infra.Tests
+      run: dotnet test src/teste/Infra.Tests/Infra.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=infra-tests.trx"
+      
+    - name: Run Integration Tests
+      run: dotnet test src/teste/Api.IntegrationTests/Api.IntegrationTests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=integration-tests.trx"
+      
+    - name: Lint - Format check
+      run: dotnet format src/ValidSolution.sln --verify-no-changes --verbosity diagnostic
+      
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: |
+          **/TestResults/*.trx

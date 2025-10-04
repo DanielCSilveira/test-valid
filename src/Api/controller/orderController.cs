@@ -97,9 +97,9 @@ namespace Api.controller
                 return NotFound($"Pedido com ID {id} não encontrado ou a operação falhou.");
             }
 
-            return NoContent(); 
+            return NoContent();
         }
 
-  
+
     }
 }

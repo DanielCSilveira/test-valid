@@ -37,6 +37,6 @@ namespace Application.Services
         /// <returns>True se o status foi atualizado com sucesso.</returns>
         Task<bool> UpdateStatusAsync(Guid id, string newStatus);
 
-   
+
     }
 }

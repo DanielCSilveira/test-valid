@@ -25,7 +25,7 @@ namespace Api.Tests
         [Fact]
         public async Task Post_WithValidCustomer_ReturnsCreatedAtAction()
         {
-            
+
             var customerDto = new CustomerCreateOrUpdateDto { Name = "Nome Customer", Email = "customer@mail.com" };
             var expectedId = Guid.NewGuid();
             _mockCustomerService.Setup(s => s.CreateAsync(customerDto)).ReturnsAsync(expectedId);

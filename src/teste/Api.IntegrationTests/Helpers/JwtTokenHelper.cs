@@ -60,11 +60,11 @@ namespace Api.IntegrationTests.Helpers
             var grant_type = configuration.GetValue<string>("Keycloak:grant_type")
                             ?? "";
 
-            var username = configuration.GetValue<string>("Keycloak:test-user:username") 
+            var username = configuration.GetValue<string>("Keycloak:test-user:username")
                             ?? "";
-            var password = configuration.GetValue<string>("Keycloak:test-user:password") 
+            var password = configuration.GetValue<string>("Keycloak:test-user:password")
                             ?? "";
-            
+
             var urlAuthentication = issuer + @"/protocol/openid-connect/token";
             var form = new Dictionary<string, string>
             {
@@ -75,7 +75,7 @@ namespace Api.IntegrationTests.Helpers
                 ["grant_type"] = grant_type
             };
             using var client = new HttpClient();
-            
+
             var response = await client.PostAsync(
                           urlAuthentication,
                           new FormUrlEncodedContent(form));

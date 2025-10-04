@@ -9,12 +9,12 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] 
+    [Authorize]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
 
-        
+
         public CustomersController(ICustomerService customerService)
         {
             _customerService = customerService;
@@ -36,10 +36,10 @@ namespace Api.Controllers
             }
 
             var newId = await _customerService.CreateAsync(customerDto);
-            
+
             return CreatedAtAction(nameof(GetById), new { id = newId }, new { id = newId });
         }
-        
+
         /// <summary>
         /// Obtém a lista de todos os clientes ativos.
         /// </summary>
@@ -82,15 +82,15 @@ namespace Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
+
             var success = await _customerService.UpdateAsync(id, customerDto);
 
             if (!success)
             {
-                return NotFound(new { message = $"Cliente com ID {id} não encontrado para atualização." }); 
+                return NotFound(new { message = $"Cliente com ID {id} não encontrado para atualização." });
             }
 
-            return NoContent(); 
+            return NoContent();
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Api.Controllers
                 return NotFound(new { message = $"Cliente com ID {id} não encontrado para exclusão (soft delete)." });
             }
 
-            return NoContent(); 
+            return NoContent();
         }
     }
 }

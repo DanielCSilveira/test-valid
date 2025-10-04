@@ -28,6 +28,6 @@ namespace Api.Configuration
             return services;
         }
 
-    
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infra.Repository
 {
-    public interface IBaseRepository<T,PK> where T : class 
+    public interface IBaseRepository<T, PK> where T : class
     {
 
         Task<T?> Get(PK id);

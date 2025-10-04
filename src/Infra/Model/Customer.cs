@@ -8,20 +8,20 @@ namespace Infra.Model
     {
         [Column("id")]
         public Guid Id { get; set; }
-        
+
         [Column("name")]
         [Required]
         [StringLength(100)]
         public required string Name { get; set; }
-        
+
         [Column("email")]
         [Required]
         [StringLength(100)]
         public required string Email { get; set; }
-        
+
         [Column("active")]
         public bool Active { get; set; } = true;
-        
+
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 

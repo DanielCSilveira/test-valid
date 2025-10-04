@@ -28,7 +28,8 @@ namespace Application.Services
 
 
             var inserted = await GetByIdAsync(id);
-            if (inserted == null) {
+            if (inserted == null)
+            {
                 throw new Exception("Ocorreu um erro durante a inserção do pedido");
             }
 
@@ -47,12 +48,12 @@ namespace Application.Services
         public async Task<OrderDto?> GetByIdAsync(Guid id)
         {
             var result = await _orderRepository.Get(id);
-            return _mapper.Map<OrderDto>(result); 
+            return _mapper.Map<OrderDto>(result);
         }
 
         public async Task<bool> UpdateStatusAsync(Guid id, string newStatus)
         {
-            var result =await _orderRepository.UpdateStatusAsync(id, newStatus);
+            var result = await _orderRepository.UpdateStatusAsync(id, newStatus);
             return true;
         }
     }

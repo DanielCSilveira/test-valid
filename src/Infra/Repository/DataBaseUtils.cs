@@ -17,7 +17,7 @@ namespace Infra.Repository
     /// </summary>
     public abstract class DataBaseUtils
     {
-        
+
         private readonly string _connectionString;
 
         public DataBaseUtils(IConfiguration configuration)
@@ -48,7 +48,7 @@ namespace Infra.Repository
         /// <returns>Uma coleção de objetos do tipo T.</returns>
         public async Task<IEnumerable<T>> QueryProcedureAsync<T>(string procedureName, object? parameters = null)
         {
-            
+
             using (var connection = CreateConnection())
             {
 
@@ -58,7 +58,7 @@ namespace Infra.Repository
                    commandType: CommandType.StoredProcedure
                );
 
-                            
+
             }
         }
 

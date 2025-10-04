@@ -94,7 +94,7 @@ namespace Api.IntegrationTests
 
             var newOrder = new OrderCreateDto() { CustomerId = customer.Id, Amount = 70 };
             var responsePost = await _client.PostAsJsonAsync($"/api/orders", newOrder);
-            
+
             responsePost.StatusCode.Should().Be(HttpStatusCode.Created);
         }
 

@@ -14,7 +14,7 @@ namespace Infra.Repository
         private readonly AppDbContext _db;
 
         public OrderRepository(IConfiguration configuration
-            ,AppDbContext dbContext) : base(configuration)
+            , AppDbContext dbContext) : base(configuration)
         {
             _db = dbContext;
         }
@@ -34,13 +34,13 @@ namespace Infra.Repository
             _db.Orders.Add(order);
             _db.SaveChanges();
             return await Task.FromResult(order.Id);
-            
+
         }
 
         public async Task<int> Update(Order entity)
         {
             _db.Update(entity);
-            return await _db.SaveChangesAsync(); 
+            return await _db.SaveChangesAsync();
         }
 
         public Task<int> UpdateStatusAsync(Guid orderId, string newStatus)

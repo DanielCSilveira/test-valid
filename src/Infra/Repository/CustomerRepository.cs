@@ -52,7 +52,7 @@ namespace Infra.Repository
         {
             _db.Update(entity);
             return await _db.SaveChangesAsync();
-            
+
         }
     }
 }

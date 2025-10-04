@@ -18,7 +18,7 @@ namespace Infra.Model
         public Guid CustomerId { get; set; }
 
         [Required]
-        [Column("amount",TypeName = "numeric(12, 2)")]
+        [Column("amount", TypeName = "numeric(12, 2)")]
         public decimal Amount { get; set; }
 
         [Column("status")]

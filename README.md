@@ -80,7 +80,7 @@ Add to ID Token: ON (Ligado)
 - [ ] README completo com instruções de setup
 
 ### CI/CD
-- [ ] Pipeline GitHub Actions (build, testes, lint)
+- [x] Pipeline GitHub Actions (build, testes, lint)
 - [ ] Deploy/local docker dev
 
 ### PLUS - Publish the project

@@ -21,9 +21,11 @@ namespace Application.Services
         {
             //check e-mail is used
             var customer = await _customerRepository.GetByMail(customerDto.Email);
-            if (customer != null) {
+            if (customer != null)
+            {
                 if (customer.Active)
-                { throw new Exception("E-mail já em uso."); 
+                {
+                    throw new Exception("E-mail já em uso.");
                 }
 
                 else
@@ -50,7 +52,8 @@ namespace Application.Services
         public async Task<bool> SoftDeleteAsync(Guid id)
         {
             var customer = await _customerRepository.Get(id);
-            if (customer == null) {
+            if (customer == null)
+            {
                 throw new Exception("Cliente não localizado");
             }
             customer.Active = false;

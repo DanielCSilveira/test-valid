@@ -37,7 +37,7 @@ namespace Application.Services
             _connection = await _factory.CreateConnectionAsync();
             _channel = await _connection.CreateChannelAsync();
 
-      
+
         }
 
         public async Task PublishAsync(string queue, object data)
@@ -56,7 +56,7 @@ namespace Application.Services
             var props = new BasicProperties
             {
                 ContentType = "application/json",
-                DeliveryMode = DeliveryModes.Persistent 
+                DeliveryMode = DeliveryModes.Persistent
             };
             // garante que a fila existe
             await _channel.QueueDeclareAsync(

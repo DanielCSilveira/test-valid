@@ -9,6 +9,6 @@ namespace Application.Services
     public interface IRabbitService
     {
         Task PublishAsync(string queue, object data);
-    
+
     }
 }

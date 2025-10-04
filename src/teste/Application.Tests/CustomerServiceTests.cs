@@ -25,7 +25,7 @@ namespace Application.Tests
         [Fact]
         public async Task CreateAsync_WithValidData_ReturnsNewGuid()
         {
-            var dto = new CustomerCreateOrUpdateDto {Name = "Nome Customer", Email = "customer@mail.com" };
+            var dto = new CustomerCreateOrUpdateDto { Name = "Nome Customer", Email = "customer@mail.com" };
             var expectedId = Guid.NewGuid();
             _mockRepository.Setup(r => r.Insert(It.IsAny<Customer>())).ReturnsAsync(expectedId);
 
@@ -38,13 +38,13 @@ namespace Application.Tests
         [Fact]
         public async Task CreateAsync_CallsRepositoryWithCorrectData()
         {
-            var dto = new CustomerCreateOrUpdateDto {Name = "Nome Customer", Email = "customer@mail.com"  };
+            var dto = new CustomerCreateOrUpdateDto { Name = "Nome Customer", Email = "customer@mail.com" };
             var expectedId = Guid.NewGuid();
             _mockRepository.Setup(r => r.Insert(It.IsAny<Customer>())).ReturnsAsync(expectedId);
 
             await _service.CreateAsync(dto);
 
-            _mockRepository.Verify(r => r.Insert(It.Is<Customer>(c => 
+            _mockRepository.Verify(r => r.Insert(It.Is<Customer>(c =>
                 c.Name == "Nome Customer" && c.Email == "customer@mail.com")), Times.Once);
         }
 

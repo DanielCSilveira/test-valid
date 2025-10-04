@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infra.Repository
 {
-    public interface IOrderRepository : IBaseRepository<Order,Guid>
+    public interface IOrderRepository : IBaseRepository<Order, Guid>
     {
         Task<int> UpdateStatusAsync(Guid orderId, string newStatus);
     }
