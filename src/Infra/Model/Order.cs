@@ -8,20 +8,25 @@ using System.Threading.Tasks;
 
 namespace Infra.Model
 {
+    [Table("orders")]
     public class Order
     {
+        [Column("id")]
         public Guid Id { get; set; }
 
+        [Column("customer_id")]
         public Guid CustomerId { get; set; }
 
         [Required]
-        [Column(TypeName = "numeric(12, 2)")]
+        [Column("amount",TypeName = "numeric(12, 2)")]
         public decimal Amount { get; set; }
 
+        [Column("status")]
         [Required]
         [StringLength(50)]
         public string Status { get; set; } = "PENDING";
 
+        [Column("create_at")]
         public DateTime CreatedAt { get; set; }
     }
 }

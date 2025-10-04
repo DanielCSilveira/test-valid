@@ -1,4 +1,5 @@
 ﻿using Infra.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,31 +11,29 @@ namespace Infra.Repository
 {
     public class OrderRepository : DataBaseUtils, IOrderRepository
     {
-        public OrderRepository(IConfiguration configuration) : base(configuration)
+        private readonly AppDbContext _db;
+
+        public OrderRepository(IConfiguration configuration
+            ,AppDbContext dbContext) : base(configuration)
         {
+            _db = dbContext;
         }
 
         public async Task<Order?> Get(Guid id)
         {
-            var order = await this.QueryProcedureAsync<Order>("order_get", new { id = id });
-            return order.FirstOrDefault();
+            return await _db.Orders.FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<IEnumerable<Order>> GetAll()
         {
-            return await this.QueryProcedureAsync<Order>("order_get", new { });
+            return await _db.Orders.ToListAsync();
         }
 
         public async Task<Guid> Insert(Order order)
         {
-            var parameters = new
-            {
-                p_customer_id = order.CustomerId,
-                p_amount = order.Amount
-            };
-
-            var ret = await this.QueryProcedureAsync<Guid>("order_create", parameters);
-            return ret.FirstOrDefault();
+            _db.Orders.Add(order);
+            _db.SaveChanges();
+            return await Task.FromResult(order.Id);
             
         }
 

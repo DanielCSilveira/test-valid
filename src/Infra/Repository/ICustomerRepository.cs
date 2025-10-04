@@ -9,5 +9,6 @@ namespace Infra.Repository
 {
     public interface ICustomerRepository: IBaseRepository<Customer,Guid>
     {
+        Task<Customer?> GetByMail(string mail);
     }
 }

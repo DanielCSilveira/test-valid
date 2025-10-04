@@ -20,6 +20,19 @@ namespace Application.Services
         }
         public async Task<Guid> CreateAsync(CustomerCreateOrUpdateDto customerDto)
         {
+            //check e-mail is used
+            var customer = await _customerRepository.GetByMail(customerDto.Email);
+            if (customer != null) {
+                if (customer.Active)
+                { throw new Exception("E-mail já em uso."); 
+                }
+
+                else
+                {
+                    throw new Exception("E-mail já em uso por um usuário inativado.");
+                }
+            }
+
             return await _customerRepository.Insert(new Customer() { Email = customerDto.Email, Name = customerDto.Name });
         }
 

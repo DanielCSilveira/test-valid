@@ -2,6 +2,7 @@ using Api.Controllers;
 using Application.DTO;
 using Application.Service;
 using FluentAssertions;
+using Infra.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -11,11 +12,13 @@ namespace Api.Tests
     public class CustomersControllerTests
     {
         private readonly Mock<ICustomerService> _mockCustomerService;
+        private readonly Mock<ICustomerRepository> _mockCustomerRepository;
         private readonly CustomersController _controller;
 
         public CustomersControllerTests()
         {
             _mockCustomerService = new Mock<ICustomerService>();
+            _mockCustomerRepository = new Mock<ICustomerRepository>();
             _controller = new CustomersController(_mockCustomerService.Object);
         }
 

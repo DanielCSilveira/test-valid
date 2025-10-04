@@ -3,30 +3,38 @@ using Microsoft.OpenApi.Models;
 using Api.Configuration;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
+using Api.middleware;
+using Infra;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configura autenticação JWT (Keycloak)
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        
-        options.Authority = builder.Configuration["Keycloak:Authority"];
-        options.Audience = builder.Configuration["Keycloak:ClientId"];
-        Console.WriteLine($"Auth: {options.Authority}");
-        Console.WriteLine($"Audience: {options.Audience}");
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                                            {
-                                                ValidateAudience = true,
-                                                ValidateIssuer = true,
-                                                ValidateLifetime = true,
-                                                ValidateIssuerSigningKey = true
-                                            };
-        options.TokenValidationParameters.RoleClaimType = "roles";
+//// Em ambiente de teste não adicionar
+//if (!builder.Environment.IsEnvironment("Testing"))
+//{
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
 
-        
-        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment(); 
-    });
+            options.Authority = builder.Configuration["Keycloak:Authority"];
+            options.Audience = builder.Configuration["Keycloak:ClientId"];
+            Console.WriteLine($"Auth: {options.Authority}");
+            Console.WriteLine($"Audience: {options.Audience}");
+            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true
+            };
+            options.TokenValidationParameters.RoleClaimType = "roles";
+
+
+            options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        });
+//}
 
 // Autorização
 builder.Services.AddAuthorization();
@@ -77,6 +85,10 @@ builder.Services.AddSwaggerGen(c =>
 // Healthchecks
 builder.Services.AddHealthChecks();
 
+//dbcontext.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -91,9 +103,14 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+//Tratativa Simplificada de excecoes
+app.UseGlobalExceptionHandler();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
 
+
+
 app.Run();
+
+public partial class Program { }

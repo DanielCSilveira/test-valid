@@ -1,4 +1,5 @@
 ﻿using Infra.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -11,34 +12,41 @@ namespace Infra.Repository
 {
     public class CustomerRepository : DataBaseUtils, ICustomerRepository
     {
-        public CustomerRepository(IConfiguration configuration) : base(configuration)
+        private readonly AppDbContext _db;
+
+        public CustomerRepository(IConfiguration configuration, AppDbContext dbContext) : base(configuration)
         {
+            _db = dbContext;
         }
 
         public async Task<Customer?> Get(Guid id)
         {
-            var customer = await this.QueryProcedureAsync<Customer>("customer_get", new { id = id });
-            return customer.FirstOrDefault();
+            return await _db.Customers.FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<Customer?> GetByMail(string mail)
+        {
+            return await _db.Customers.FirstOrDefaultAsync(i => i.Email == mail);
+
         }
 
         public async Task<IEnumerable<Customer>> GetAll()
         {
-            return await this.QueryProcedureAsync<Customer>("customer_list", new { });
+            return await _db.Customers.Where(c => c.Active).ToListAsync();
+                       
         }
 
         public async Task<Guid> Insert(Customer customer)
         {
-            var parameters = new
-            {
-                p_name = customer.Name,
-                p_email = customer.Email,
-            };
+            
+            _db.Customers.Add(customer);
+            _db.SaveChanges();
 
-            var ret = await this.QueryProcedureAsync<Guid>("customer_create", parameters);
-            return ret.FirstOrDefault();
+            return await Task.FromResult(customer.Id);
+
 
         }
 
-    
+
     }
 }
