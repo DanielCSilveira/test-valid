@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Api.Configuration;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication;
 using Api.middleware;
 using Infra;
 using Microsoft.EntityFrameworkCore;

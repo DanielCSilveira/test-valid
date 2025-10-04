@@ -60,10 +60,8 @@ Add to ID Token: ON (Ligado)
 - [x] Healthcheck e Swagger
 
 ### Worker
-- [ ] Configurar consumo de fila RabbitMQ (pedidos)
-- [ ] Processamento de mensagens
-- [ ] Logs e tratamento de erros
-- [ ] Testes unitários/integrados do Worker
+- [x] Configurar consumo de fila RabbitMQ (pedidos)
+- [x] Processamento de mensagens
 
 ### Frontend (React)
 - [ ] Configurar login OIDC com Keycloak
