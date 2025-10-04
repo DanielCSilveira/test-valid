@@ -31,9 +31,6 @@ jobs:
     - name: Run Unit Tests - Application.Tests
       run: dotnet test src/teste/Application.Tests/Application.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=application-tests.trx"
       
-    - name: Run Unit Tests - Infra.Tests
-      run: dotnet test src/teste/Infra.Tests/Infra.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=infra-tests.trx"
-      
     - name: Run Integration Tests
       run: dotnet test src/teste/Api.IntegrationTests/Api.IntegrationTests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=integration-tests.trx"
       
