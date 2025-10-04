@@ -13,14 +13,28 @@ namespace Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
-        public OrderService(IOrderRepository orderRepository, IMapper mapper)
+        private readonly IRabbitService _rabbit;
+        public OrderService(IOrderRepository orderRepository,
+            IMapper mapper,
+            IRabbitService rabbit)
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
+            _rabbit = rabbit;
         }
-        public Task<OrderDto> CreateAndPublishAsync(OrderCreateDto orderDto)
+        public async Task<OrderDto> CreateAndPublishAsync(OrderCreateDto orderDto)
         {
-            throw new NotImplementedException();
+            var id = await _orderRepository.Insert(new Infra.Model.Order { Amount = orderDto.Amount, Status = "NEW", CustomerId = orderDto.CustomerId });
+
+
+            var inserted = await GetByIdAsync(id);
+            if (inserted == null) {
+                throw new Exception("Ocorreu um erro durante a inserção do pedido");
+            }
+
+            await _rabbit.PublishAsync("new_orders", new { id = id });
+
+            return inserted;
         }
 
         public async Task<IEnumerable<OrderDto>> GetAllAsync()

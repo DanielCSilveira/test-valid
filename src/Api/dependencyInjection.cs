@@ -13,7 +13,8 @@ namespace Api.Configuration
         {
             services.AddAutoMapper(typeof(CustomerService).Assembly);
 
-
+            //Rabbit
+            services.AddSingleton<IRabbitService, RabbitService>();
 
             //Services
             services.AddScoped<ICustomerService, CustomerService>();

@@ -61,7 +61,6 @@ namespace Api.Controllers
         {
             var customer = await _customerService.GetByIdAsync(id);
 
-            //A procedure já filtra os actives logo nunca cairá 
             if (customer == null || !customer.IsActive)
             {
                 return NotFound(new { message = $"Cliente com ID {id} não encontrado ou inativo." });
