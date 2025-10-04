@@ -15,7 +15,8 @@ namespace Application.Mapper
         {
             CreateMap<Customer, CustomerDto>()
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.Active))
-                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreatedAt));
+                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreatedAt)
+                );
         }
     }
 }

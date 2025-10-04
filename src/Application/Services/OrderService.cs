@@ -24,7 +24,7 @@ namespace Application.Services
         }
         public async Task<OrderDto> CreateAndPublishAsync(OrderCreateDto orderDto)
         {
-            var id = await _orderRepository.Insert(new Infra.Model.Order { Amount = orderDto.Amount, Status = "NEW", CustomerId = orderDto.CustomerId });
+            var id = await _orderRepository.Insert(new Infra.Model.Order { Amount = orderDto.Amount, Status = "NEW", CustomerId = orderDto.CustomerId, CreatedAt = DateTime.Now });
 
 
             var inserted = await GetByIdAsync(id);

@@ -21,12 +21,12 @@ namespace Infra.Repository
 
         public async Task<Order?> Get(Guid id)
         {
-            return await _db.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            return await _db.Orders.Include(p => p.Customer).FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<IEnumerable<Order>> GetAll()
         {
-            return await _db.Orders.ToListAsync();
+            return await _db.Orders.Include(p => p.Customer).ToListAsync();
         }
 
         public async Task<Guid> Insert(Order order)

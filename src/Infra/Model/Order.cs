@@ -28,5 +28,8 @@ namespace Infra.Model
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
+
+        [ForeignKey("CustomerId")]
+        public Customer? Customer { get; set; }
     }
 }

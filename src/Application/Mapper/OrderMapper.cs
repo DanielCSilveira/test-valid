@@ -13,7 +13,9 @@ namespace Application.Mapper
     {
         public OrderMapper()
         {
-            CreateMap<Order, OrderDto>();
+            CreateMap<Order, OrderDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer!.Name))
+                ;
         }
     }
 }

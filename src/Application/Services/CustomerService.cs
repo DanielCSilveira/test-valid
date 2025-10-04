@@ -57,9 +57,18 @@ namespace Application.Services
             return await _customerRepository.Update(customer) > 0;
         }
 
-        public Task<bool> UpdateAsync(Guid id, CustomerCreateOrUpdateDto customerDto)
+        public async Task<bool> UpdateAsync(Guid id, CustomerCreateOrUpdateDto customerDto)
         {
-            throw new NotImplementedException();
+            var customer = await _customerRepository.Get(id);
+            if (customer == null)
+            {
+                throw new Exception("Cliente não localizado");
+            }
+
+            customer.Name = customerDto.Name;
+            customer.Email = customerDto.Email;
+
+            return await _customerRepository.Update(customer) > 0;
         }
     }
 }
