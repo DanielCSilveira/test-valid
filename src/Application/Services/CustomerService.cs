@@ -16,7 +16,6 @@ namespace Application.Services
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
-            _mapper = mapper;
         }
         public async Task<Guid> CreateAsync(CustomerCreateOrUpdateDto customerDto)
         {
@@ -42,14 +41,20 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<CustomerDto>>(result);
         }
 
-        public Task<CustomerDto?> GetByIdAsync(Guid id)
+        public async Task<CustomerDto?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var result = await _customerRepository.Get(id);
+            return _mapper.Map<CustomerDto>(result);
         }
 
-        public Task<bool> SoftDeleteAsync(Guid id)
+        public async Task<bool> SoftDeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var customer = await _customerRepository.Get(id);
+            if (customer == null) {
+                throw new Exception("Cliente não localizado");
+            }
+            customer.Active = false;
+            return await _customerRepository.Update(customer) > 0;
         }
 
         public Task<bool> UpdateAsync(Guid id, CustomerCreateOrUpdateDto customerDto)

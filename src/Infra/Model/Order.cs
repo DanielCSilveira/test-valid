@@ -26,7 +26,7 @@ namespace Infra.Model
         [StringLength(50)]
         public string Status { get; set; } = "PENDING";
 
-        [Column("create_at")]
+        [Column("created_at")]
         public DateTime CreatedAt { get; set; }
     }
 }

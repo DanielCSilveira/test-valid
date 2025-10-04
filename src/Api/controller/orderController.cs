@@ -90,7 +90,7 @@ namespace Api.controller
                 return BadRequest(ModelState);
             }
 
-            var success = await _orderService.UpdateStatusByProcedureAsync(id, statusDto.NewStatus);
+            var success = await _orderService.UpdateStatusAsync(id, statusDto.NewStatus);
 
             if (!success)
             {

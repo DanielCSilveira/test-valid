@@ -14,6 +14,7 @@ namespace Infra.Repository
         Task<IEnumerable<T>> GetAll();
 
         Task<PK> Insert(T entity);
+        Task<int> Update(T entity);
 
     }
 }

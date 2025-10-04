@@ -17,6 +17,7 @@ namespace Api.Configuration
 
             //Services
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IOrderService, OrderService>();
 
 
             //Repositories

@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infra.Model;
 
 namespace Infra.Repository
 {
@@ -71,11 +72,9 @@ namespace Infra.Repository
         {
             using (var connection = CreateConnection())
             {
-                return await connection.ExecuteAsync(
-                   sql: procedureName,
-                   param: parameters,
-                   commandType: CommandType.StoredProcedure
-               );
+                var sql = "CALL order_update_status(@p_id, @p_new_status)";
+                return await connection.ExecuteAsync(sql, parameters);
+
             }
         }
     }

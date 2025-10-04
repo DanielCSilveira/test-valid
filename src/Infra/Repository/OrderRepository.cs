@@ -37,6 +37,12 @@ namespace Infra.Repository
             
         }
 
+        public async Task<int> Update(Order entity)
+        {
+            _db.Update(entity);
+            return await _db.SaveChangesAsync(); 
+        }
+
         public Task<int> UpdateStatusAsync(Guid orderId, string newStatus)
         {
             return ExecuteProcedureAsync("order_update_status", new

@@ -35,7 +35,7 @@ namespace Application.Services
         /// <param name="id">ID do pedido.</param>
         /// <param name="newStatus">O novo status a ser aplicado.</param>
         /// <returns>True se o status foi atualizado com sucesso.</returns>
-        Task<bool> UpdateStatusByProcedureAsync(Guid id, string newStatus);
+        Task<bool> UpdateStatusAsync(Guid id, string newStatus);
 
    
     }

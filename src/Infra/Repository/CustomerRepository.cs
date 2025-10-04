@@ -33,20 +33,26 @@ namespace Infra.Repository
         public async Task<IEnumerable<Customer>> GetAll()
         {
             return await _db.Customers.Where(c => c.Active).ToListAsync();
-                       
+
         }
+
+
 
         public async Task<Guid> Insert(Customer customer)
         {
-            
+
             _db.Customers.Add(customer);
             _db.SaveChanges();
 
             return await Task.FromResult(customer.Id);
 
-
         }
 
-
+        public async Task<int> Update(Customer entity)
+        {
+            _db.Update(entity);
+            return await _db.SaveChangesAsync();
+            
+        }
     }
 }
