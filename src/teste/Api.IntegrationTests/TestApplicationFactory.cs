@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using Application.Services;
 using Infra;
-using Infra.Model; 
+using Infra.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

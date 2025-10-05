@@ -14,6 +14,11 @@ namespace ValidApi.Controllers
         {
             var userName = User.Identity?.Name ?? "Unknown";
 
+
+
+
+
+
             var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
 
             return Ok(new
