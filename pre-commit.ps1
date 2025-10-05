@@ -1,5 +1,3 @@
-# Nota: Este é o script de PowerShell que faz o trabalho de formatação.
-# Ele será chamado pelo hook 'pre-commit' (sem extensão) do Git.
 
 # Configurações
 $SOLUTION_PATH = "src/ValidSolution.sln"
@@ -27,7 +25,6 @@ if ($EXIT_CODE -ne 0) {
 }
 
 Write-Host "✅ Formatting check passed. Commit allowed." -ForegroundColor Green
-exit 0
 
 
 Write-Host "✅ Formatting check passed." -ForegroundColor Green

@@ -33,7 +33,6 @@ namespace Application.Tests
             var result = await _service.CreateAsync(dto);
 
             result.Should().Be(expectedId);
-            result.Should().Be(Guid.NewGuid());
             _mockRepository.Verify(r => r.Insert(It.Is<Customer>(c => c.Name == dto.Name && c.Email == dto.Email)), Times.Once);
         }
 
