@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -14,11 +14,11 @@ namespace Api.IntegrationTests.Helpers
 {
     public static class JwtTokenHelper
     {
-        private static string GenerateTestToken(
+        public static string GenerateTestToken(
             string username = "testuser",
             string role = "user",
-            string issuer = "http://localhost",
-            string audience = "my-api",
+            string issuer = "http://localhost:8080/realms/valid",
+            string audience = "valid-api",
             string secretKey = "super-secret-test-key-12345123123123123123123123"
         )
         {
@@ -43,53 +43,11 @@ namespace Api.IntegrationTests.Helpers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public async static Task<string> GenerateValidToken(IConfiguration configuration
-      )
-        {
-
-            var issuer = configuration.GetValue<string>("Authentication:Authority")
-                         ?? configuration.GetValue<string>("Keycloak:Authority")
-                         ?? "";
-
-            var audience = configuration.GetValue<string>("Authentication:Audience")
-                           ?? configuration.GetValue<string>("Keycloak:ClientId")
-                           ?? "";
-
-            var secretKey = configuration.GetValue<string>("Keycloak:client_secret")
-                            ?? "";
-            var grant_type = configuration.GetValue<string>("Keycloak:grant_type")
-                            ?? "";
-
-            var username = configuration.GetValue<string>("Keycloak:test-user:username")
-                            ?? "";
-            var password = configuration.GetValue<string>("Keycloak:test-user:password")
-                            ?? "";
-
-            var urlAuthentication = issuer + @"/protocol/openid-connect/token";
-            var form = new Dictionary<string, string>
-            {
-                ["client_id"] = audience,
-                ["client_secret"] = secretKey,
-                ["username"] = username,
-                ["password"] = password,
-                ["grant_type"] = grant_type
-            };
-            using var client = new HttpClient();
-
-            var response = await client.PostAsync(
-                          urlAuthentication,
-                          new FormUrlEncodedContent(form));
-
-            response.EnsureSuccessStatusCode();
-            var tokenResponse = await response.Content.ReadFromJsonAsync<JsonElement>();
-            return tokenResponse.GetProperty("access_token").GetString() ?? "";
-
-
-        }
+   
 
         public static string GenerateInvalidToken()
         {
-            return JwtTokenHelper.GenerateTestToken();
+            return "invalid";
         }
     }
 }

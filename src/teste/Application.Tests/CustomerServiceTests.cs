@@ -29,6 +29,7 @@ namespace Application.Tests
             var expectedId = Guid.NewGuid();
             _mockRepository.Setup(r => r.Insert(It.IsAny<Customer>())).ReturnsAsync(expectedId);
 
+
             var result = await _service.CreateAsync(dto);
 
             result.Should().Be(expectedId);

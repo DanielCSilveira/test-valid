@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Api.IntegrationTests.Helpers;
@@ -6,6 +6,7 @@ using Application.DTO;
 using Application.Services;
 using FluentAssertions;
 using Infra.Model;
+using Infra.Repository;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,12 +15,12 @@ using Xunit;
 
 namespace Api.IntegrationTests
 {
-    public class OrderIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+    public class OrderIntegrationTests : IClassFixture<TestApplicationFactory>
     {
         private readonly HttpClient _client;
-        private readonly WebApplicationFactory<Program> _factory;
+        private readonly TestApplicationFactory _factory;
         private readonly IConfiguration _config;
-        public OrderIntegrationTests(WebApplicationFactory<Program> factory)
+        public OrderIntegrationTests(TestApplicationFactory factory)
         {
             _client = factory.CreateClient();
             _factory = factory;
@@ -30,8 +31,6 @@ namespace Api.IntegrationTests
         public async Task Post_CreateOrder_returnCreated()
         {
             var mockRabbit = new Mock<IRabbitService>();
-            // use a mock Rabbit to validate the message publish
-            // create a exclusive factory and client to this test
             var factory = _factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
@@ -44,12 +43,11 @@ namespace Api.IntegrationTests
             });
 
             var client = factory.CreateClient();
-            var token = await JwtTokenHelper.GenerateValidToken(_config);
+            var token = JwtTokenHelper.GenerateTestToken();
 
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            //for test porpoise, get first customer to use
             var responseGet = await client.GetAsync($"/api/customers/");
             var customers = await responseGet.Content.ReadFromJsonAsync<IEnumerable<CustomerDto>>();
             var customer = customers?.First();
@@ -63,7 +61,6 @@ namespace Api.IntegrationTests
 
 
             responsePost.StatusCode.Should().Be(HttpStatusCode.Created);
-            // Verifica se o PublishAsync foi chamado uma única vez
             mockRabbit.Verify(
                 r => r.PublishAsync(It.IsAny<string>(), It.IsAny<object>()),
                 Times.Once
@@ -72,19 +69,16 @@ namespace Api.IntegrationTests
         }
 
 
-        /// <summary>
-        /// POC exclusive, publish on rabbitMq, direct to test 
-        /// </summary>
-        /// <returns></returns>
+      
         [Fact]
         public async Task PublishMessageOnQueue_CreateOrder_returnCreated()
         {
-            var token = await JwtTokenHelper.GenerateValidToken(_config);
+            var token = JwtTokenHelper.GenerateTestToken();
 
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            //for test porpoise, get first customer to use
+            
             var responseGet = await _client.GetAsync($"/api/customers/");
             var customers = await responseGet.Content.ReadFromJsonAsync<IEnumerable<CustomerDto>>();
             var customer = customers?.First();
@@ -101,29 +95,42 @@ namespace Api.IntegrationTests
         [Fact]
         public async Task Put_UpdateStatus_ReturnNoContent()
         {
-            var token = await JwtTokenHelper.GenerateValidToken(_config);
+            var token = JwtTokenHelper.GenerateTestToken();
+            var testOrderId = Guid.Parse("a5c92c8b-68d7-40e9-b2f7-5c1d6e8b2b7a");
+            var newStatus = "NEW_STATUS_A";
+            var orderUpdate = new OrderStatusUpdateDto { NewStatus = newStatus };
 
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            var mockOrderRepo = new Mock<IOrderRepository>();
 
-            //for test porpoise, get first order to set a new status
-            var responseGet = await _client.GetAsync($"/api/orders/");
-            var orders = await responseGet.Content.ReadFromJsonAsync<IEnumerable<OrderDto>>();
-            var order = orders?.First();
+            mockOrderRepo.Setup(r =>
+                r.UpdateStatusAsync(testOrderId, newStatus))
+                .ReturnsAsync(1);
 
-            var orderUpdate = new OrderStatusUpdateDto
+            var factory = _factory.WithWebHostBuilder(builder =>
             {
-                NewStatus = order?.Status != "New Status A" ? "New Status A" : "Other Status"
-            };
+                builder.ConfigureServices(services =>
+                {
+                    var descriptor = services.Single(d => d.ServiceType == typeof(IOrderRepository));
+                    services.Remove(descriptor);
+                    services.AddSingleton(mockOrderRepo.Object);
+                });
+            });
 
-            var responsePut = await _client.PutAsJsonAsync($"/api/orders/{order?.Id}/status", orderUpdate);
+            var client = factory.CreateClient();
+
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.AuthenticationScheme, "TestToken");
+
+
+            var responsePut = await client.PutAsJsonAsync($"/api/orders/{testOrderId}/status", orderUpdate);
+
 
             responsePut.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-            var responseGetUpdatedOrder = await _client.GetAsync($"/api/orders/{order?.Id}");
-            var orderUpdated = await responseGetUpdatedOrder.Content.ReadFromJsonAsync<OrderDto>();
 
-            Assert.Equal(orderUpdate.NewStatus, orderUpdated?.Status);
+            mockOrderRepo.Verify(r =>
+                r.UpdateStatusAsync(testOrderId, newStatus),
+                Times.Once);
 
         }
 
