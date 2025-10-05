@@ -1,91 +1,134 @@
-# Valid - Test Técnico
+# **Valid - Teste Técnico**
 
-Este repositório contém a POC para do teste técnico de um sistema WinForms legado em uma arquitetura com **.NET 8, PostgreSQL, RabbitMQ, Keycloak (OIDC)** e **React**.
-
----
-
-## Stack Utilizada
-- **.NET 8** (API REST + Worker)
-- **PostgreSQL 15** (com procedures)
-- **RabbitMQ** (mensageria)
-- **Keycloak** (OIDC/JWT)
-- **React + Vite** (frontend)
-- **Docker Compose** (orquestração)
-- **GitHub Actions** (CI/CD)
+Este repositório contém a POC do teste técnico utilizando **.NET 8**, **PostgreSQL**, **RabbitMQ**, **Keycloak (OIDC)** e **React**.
 
 ---
 
-## Estrutura do Projeto
+##  Stack Utilizada
+- **.NET 8** — API REST + Worker  
+- **PostgreSQL 15** — com *stored procedures*  
+- **RabbitMQ** — mensageria  
+- **Keycloak** — autenticação via OIDC/JWT  
+- **React + Vite** — frontend  
+- **Docker Compose** — orquestração  
+- **GitHub Actions** — CI/CD  
 
+---
 
-## SETUP
-### KeyCloak
-Setup necessário para execução local
-- **Realm** - crie um novo realm chamado valid
-- **Client** - Crie um cliente chamado valid-api
--- configure Clients>valid-api>Client Scopes>valid_api_dedicated>add mapper (By configuration):
-Name: Valid Client Audience
-Mapper Type: Audience
-Included Client Audience: valid-api (Seu Client ID)
-Add to Access Token: ON (Ligado)
-Add to ID Token: ON (Ligado)
+##  Estrutura do Projeto
 
+O projeto foi estruturado com o mínimo necessário para garantir boas práticas e funcionamento adequado.  
+O GitHub Actions está configurado para executar testes e aplicar *lint* automaticamente.  
+Também foi adicionado um *pre-commit hook*, que executa os testes e o *lint* antes de cada commit.
 
-## ✅ Checklist do Projeto - Desafio Técnico
+> **(Inserir diagrama de comunicação entre os serviços aqui)**
 
-### Estrutura e setup
-- [x] Criar solução .NET 8
-- [x] Criar projetos: API, Worker, LegacySimulator
-- [x] Criar projeto React + Vite + TypeScript
-- [x] Criar Docker Compose com:
-  - [x] PostgreSQL
-  - [x] RabbitMQ
-  - [x] Keycloak
-  - [x] API
-  - [x] Worker
-  - [x] Frontend
+---
 
-### Banco de dados
-- [x] Criar tabelas: Clientes, Pedidos
-- [x] Criar procedures
-- [x] Scripts de seed/teste
+##  Arquitetura (ADR)
 
-### API (.NET 8)
-- [x] Configurar JWT Bearer com Keycloak
-- [x] Implementar endpoints Clientes (CRUD)
-- [x] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
-- [x] Implementar endpoint PUT para status via procedure
-- [x] Testes unitários (mínimo 10)
-- [x] Testes de integração (mínimo 5)
-- [x] Healthcheck e Swagger
+### **API**
+ [src/Api](https://github.com/DanielCSilveira/test-valid/tree/main/src/Api)  
+Camada de apresentação do backend, com as APIs REST.  
+Contém endpoints simplificados para **Clientes (Customers)** e **Pedidos (Orders)**.  
+O cliente contém apenas informações básicas de identificação, e o pedido é representado de forma plana (sem itens).  
 
-### Worker
-- [x] Configurar consumo de fila RabbitMQ (pedidos)
-- [x] Processamento de mensagens
+---
 
-### Frontend (React)
-- [ ] Configurar login OIDC com Keycloak
-- [ ] Criar páginas Clientes e Pedidos (CRUD)
-- [ ] Integração com API
-- [ ] Roteamento com React Router
-- [ ] Layout básico e validações
+### **Application**
+ [src/Application](https://github.com/DanielCSilveira/test-valid/tree/main/src/Application)  
+Camada de negócio (*business layer*).  
+Contém regras simples de validação e lógica de domínio.  
 
-### Testes & Insomnia/Postman
-- [ ] Criar coleção para teste da API
-- [ ] Testar endpoints protegidos com JWT
+Exemplo:  
+- [CustomerService.cs](https://github.com/DanielCSilveira/test-valid/blob/main/src/Application/Services/CustomerService.cs) — validações de cliente  
+- [OrderService.cs](https://github.com/DanielCSilveira/test-valid/blob/main/src/Application/Services/OrderService.cs) — envia mensagem para a fila ao inserir novo pedido  
 
-### Documentação
-- [ ] ADRs (Architecture Decision Records)
-- [ ] Diagramas (C4, sequence, fluxo de pedidos)
-- [ ] README completo com instruções de setup
+---
 
-### CI/CD
-- [x] Pipeline GitHub Actions (build, testes, lint)
-- [ ] Deploy/local docker dev
+### **Infra**
+ [src/Infra](https://github.com/DanielCSilveira/test-valid/tree/main/src/Infra)  
+Camada de acesso a dados, utilizando ORM e *stored procedures*.  
 
-### PLUS - Publish the project
-- [ ] Publish the Base Infra - compose infra
-- [ ] Publish API
-- [ ] Publish Front
-- [ ] Publish Worker
- 
+Exemplo:  
+- [OrderRepository.cs](https://github.com/DanielCSilveira/test-valid/blob/main/src/Infra/Repository/OrderRepository.cs)
+
+---
+
+### **Worker**
+ [src/Worker](https://github.com/DanielCSilveira/test-valid/tree/main/src/Worker)  
+Serviço *Worker* responsável por consumir mensagens do RabbitMQ.  
+Na POC, há um *worker* por fila — cada tipo de mensagem possui sua própria fila.  
+Atualmente, o *worker* apenas atualiza o status do pedido para **PENDING**, mas poderia evoluir para gerar ordens de produção, por exemplo.  
+
+---
+
+### **Tests**
+ [src/teste](https://github.com/DanielCSilveira/test-valid/tree/main/src/teste)  
+Cada projeto possui seu respectivo conjunto de testes, além de um projeto de integração.  
+Os testes foram implementados apenas para demonstração (*POC*), sem foco em cobertura total.  
+Poderiam ser adicionadas métricas de cobertura, ferramentas de análise estática e validações automáticas no GitHub Actions.  
+
+---
+
+### **Front**
+ [valid-front](https://github.com/DanielCSilveira/test-valid/tree/main/valid-front)  
+Aplicação criada do zero com **React + Vite**, já integrada ao **Keycloak** para autenticação.  
+Implementa um CRUD básico de Clientes e Pedidos.  
+A estrutura é simples, apenas com *router* e *services*, sem modularização avançada.  
+
+---
+
+##  Setup
+
+Assumindo que nomes, usuários e portas padrão não serão alterados:
+
+1. Execute o comando:
+   ```bash
+   docker-compose up -d
+   ```
+2. Serão criados os seguintes containers:
+   - **RabbitMQ**
+   - **Keycloak**
+   - **PostgreSQL**
+
+---
+
+###  Keycloak Setup
+
+#### 1. Crie um novo Realm:
+> **Nome:** `valid`
+
+#### 2. Crie o cliente da API:
+> **Client ID:** `valid-api`
+
+No menu **Clients > valid-api > Client Scopes > valid_api_dedicated**, adicione um mapper com as seguintes configurações:
+
+| Campo | Valor |
+|-------|--------|
+| **Name** | Valid Client Audience |
+| **Mapper Type** | Audience |
+| **Included Client Audience** | valid-api |
+| **Add to Access Token** | ON |
+| **Add to ID Token** | ON |
+
+#### 3. Crie o cliente do Front:
+> **Client ID:** `valid-front`
+
+Adicione o `valid-api` como *audience* também.
+
+**Configurações de acesso:**
+
+| Campo | Valor |
+|--------|--------|
+| **Root URL** | http://localhost:5173/ |
+| **Home URL** | http://localhost:5173 |
+| **Valid Redirect URIs** | http://localhost:5173 |
+| **Valid Post Logout Redirect URIs** | http://localhost:5173 |
+| **Web Origins** | http://localhost:5173 |
+| **Admin URL** | http://localhost:5173/ |
+
+---
+
+###  PostgreSQL
+O banco será criado automaticamente com as duas tabelas principais, procedure  e uma massa de dados inicial (*seed*) para testes.
