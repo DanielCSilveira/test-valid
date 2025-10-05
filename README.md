@@ -52,18 +52,16 @@ Add to ID Token: ON (Ligado)
 
 ### API (.NET 8)
 - [x] Configurar JWT Bearer com Keycloak
-- [ ] Implementar endpoints Clientes (CRUD)
-- [ ] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
-- [ ] Implementar endpoint PUT para status via procedure
-- [ ] Testes unitários (mínimo 10)
-- [ ] Testes de integração (mínimo 5)
-- [ ] Healthcheck e Swagger
+- [x] Implementar endpoints Clientes (CRUD)
+- [x] Implementar endpoints Pedidos (POST + publicar RabbitMQ)
+- [x] Implementar endpoint PUT para status via procedure
+- [x] Testes unitários (mínimo 10)
+- [x] Testes de integração (mínimo 5)
+- [x] Healthcheck e Swagger
 
 ### Worker
-- [ ] Configurar consumo de fila RabbitMQ (pedidos)
-- [ ] Processamento de mensagens
-- [ ] Logs e tratamento de erros
-- [ ] Testes unitários/integrados do Worker
+- [x] Configurar consumo de fila RabbitMQ (pedidos)
+- [x] Processamento de mensagens
 
 ### Frontend (React)
 - [ ] Configurar login OIDC com Keycloak
@@ -82,7 +80,7 @@ Add to ID Token: ON (Ligado)
 - [ ] README completo com instruções de setup
 
 ### CI/CD
-- [ ] Pipeline GitHub Actions (build, testes, lint)
+- [x] Pipeline GitHub Actions (build, testes, lint)
 - [ ] Deploy/local docker dev
 
 ### PLUS - Publish the project

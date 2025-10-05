@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Este é o wrapper que chama o script PowerShell
+# Executa o script PowerShell e retorna seu código de saída
+powershell.exe -ExecutionPolicy Bypass -File "pre-commit.ps1"
+exit $?
+
+
