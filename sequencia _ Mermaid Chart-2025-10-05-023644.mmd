@@ -1,0 +1,36 @@
+flowchart LR
+    subgraph Frontend [Frontend - React/Vite]
+        UI[Interface do Usuário]
+    end
+
+    subgraph Keycloak [Keycloak - OIDC/JWT]
+        KC[(Autenticação e Autorização)]
+    end
+
+    subgraph API [.NET 8 API]
+        Controller[Controllers REST]
+        Service[Application Services]
+        Repo[Infra / Repository]
+    end
+
+    subgraph DB[PostgreSQL]
+        Tables[(Tabelas + Procedures)]
+    end
+
+    subgraph RabbitMQ [RabbitMQ]
+        Queue[Fila: new_order]
+    end
+
+    subgraph Worker [.NET Worker Service]
+        Consumer[Consumidor de Mensagens]
+    end
+
+    %% Connections
+    UI -->|Login / Token| KC
+    UI -->|Requisições REST + JWT| Controller
+    Controller --> Service
+    Service --> Repo
+    Repo --> DB
+    Service -->|Publica mensagem| Queue
+    Queue --> Consumer
+    Consumer -->|Atualiza Status Pedido| DB
