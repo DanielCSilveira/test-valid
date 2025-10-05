@@ -21,7 +21,6 @@ O projeto foi estruturado com o mínimo necessário para garantir boas práticas
 O GitHub Actions está configurado para executar testes e aplicar *lint* automaticamente.  
 Também foi adicionado um *pre-commit hook*, que executa os testes e o *lint* antes de cada commit.
 
-> **(Inserir diagrama de comunicação entre os serviços aqui)**
 ![Diagrama de Comunicação](./sequencia.png)
 ---
 
