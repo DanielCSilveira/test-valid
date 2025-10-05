@@ -50,7 +50,7 @@ namespace Api.IntegrationTests.Mocks
             mock.Setup(r => r.Update(It.IsAny<Customer>()))
                 .ReturnsAsync(1);
 
-         
+
 
             return mock;
         }

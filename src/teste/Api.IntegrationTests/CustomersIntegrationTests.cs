@@ -45,7 +45,7 @@ namespace Api.IntegrationTests
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-       
+
         [Fact]
         public async Task Get_WithValidAuth_ReturnsAuthorized()
         {

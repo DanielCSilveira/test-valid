@@ -30,7 +30,7 @@ namespace Api.IntegrationTests.Mocks
                     Email = "mock1@example.com",
                     IsActive = true,
                     CreationDate = DateTime.Now
-                    
+
                 },
                 new CustomerDto
                 {

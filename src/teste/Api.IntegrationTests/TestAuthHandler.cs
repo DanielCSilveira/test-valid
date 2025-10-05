@@ -22,7 +22,7 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     {
         var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, "911e0ccd-b673-4d3d-8c00-56efdf57db51"),
-            new Claim(ClaimTypes.Name, "teste"), 
+            new Claim(ClaimTypes.Name, "teste"),
             new Claim(ClaimTypes.Role, "admin"),
             new Claim("scope", "openid profile email")
         };

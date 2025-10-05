@@ -69,7 +69,7 @@ namespace Api.IntegrationTests
         }
 
 
-      
+
         [Fact]
         public async Task PublishMessageOnQueue_CreateOrder_returnCreated()
         {
@@ -78,7 +78,7 @@ namespace Api.IntegrationTests
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            
+
             var responseGet = await _client.GetAsync($"/api/customers/");
             var customers = await responseGet.Content.ReadFromJsonAsync<IEnumerable<CustomerDto>>();
             var customer = customers?.First();

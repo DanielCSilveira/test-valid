@@ -43,7 +43,7 @@ namespace Api.IntegrationTests.Helpers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-   
+
 
         public static string GenerateInvalidToken()
         {
