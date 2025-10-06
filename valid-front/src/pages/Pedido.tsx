@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { orderService } from "../services/orderService";
-import { type OrderDto, type OrderUpdateStatusDto } from "../types/order";
+import { type OrderDto } from "../types/order";
 import "./Cliente.css";
 
 const Pedido = () => {

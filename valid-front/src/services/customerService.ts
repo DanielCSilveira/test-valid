@@ -14,8 +14,8 @@ export const customerService = {
     return apiClient.post<CustomerDto>('/api/Customers', customer);
   },
 
-  update: async (id: string, customer: Partial<CustomerDto>): Promise<CustomerDto> => {
-    return apiClient.put<CustomerDto>(`/api/Customers/${id}`, customer);
+  update: async (id: string, customer: Partial<CustomerDto>): Promise<void> => {
+    return apiClient.put(`/api/Customers/${id}`, customer);
   },
 
   delete: async (id: string): Promise<void> => {

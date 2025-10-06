@@ -11,13 +11,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        var Authority = builder.Configuration["Keycloak:Authority"];
+        var ClientId = builder.Configuration["Keycloak:ClientId"];
 
-        options.Authority = builder.Configuration["Keycloak:Authority"];
-        options.Audience = builder.Configuration["Keycloak:ClientId"];
-        Console.WriteLine($"Auth: {options.Authority}");
-        Console.WriteLine($"Audience: {options.Audience}");
+        options.Authority = Authority;
+        options.Audience = ClientId;
+
+        if (string.IsNullOrWhiteSpace(Authority) || string.IsNullOrWhiteSpace(ClientId))
+        {
+
+            throw new ArgumentNullException("Keycloack settings not found");
+        }
+
+        Console.WriteLine($"Auth: {Authority}");
+        Console.WriteLine($"Audience: {ClientId}");
+
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
+
+            ValidIssuers = new[]
+                             {
+                                "http://keycloak:8080/realms/valid", // container poc porpoise
+                                "http://localhost:8080/realms/valid" // front local
+                            },
             ValidateAudience = true,
             ValidateIssuer = true,
             ValidateLifetime = true,
@@ -25,8 +41,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
         options.TokenValidationParameters.RoleClaimType = "roles";
 
-
-        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        //always set false to poc Porpoise
+        options.RequireHttpsMetadata = false;
+        //options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
     });
 
 // 1. Adicionar o serviço CORS no container
@@ -36,7 +53,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
@@ -101,11 +118,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//for poc porpoise, ignore environment and always show swagger UI
+// if (app.Environment.IsDevelopment())
+// {
+app.UseSwagger();
+app.UseSwaggerUI();
+// }
 
 app.UseHttpsRedirection();
 

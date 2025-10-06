@@ -1,24 +1,20 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# Etapa de build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-EXPOSE 5259
 
-ENV ASPNETCORE_URLS=http://+:5259
+# Copia o csproj primeiro para aproveitar cache do Docker
+COPY Api/Api.csproj Api/
+COPY Application/Application.csproj Application/
+COPY Infra/Infra.csproj Infra/
+RUN dotnet restore Api/Api.csproj
 
-USER app
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG configuration=Release
-WORKDIR /src
-COPY ["src/Api/Api.csproj", "src/Api/"]
-RUN dotnet restore "src/Api/Api.csproj"
+# Copia o resto do código
 COPY . .
-WORKDIR "/src/src/Api"
-RUN dotnet build "Api.csproj" -c $configuration -o /app/build
+RUN dotnet publish -c Release -o /out
 
-FROM build AS publish
-ARG configuration=Release
-RUN dotnet publish "Api.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+# Etapa de runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /out .
+EXPOSE 80
 ENTRYPOINT ["dotnet", "Api.dll"]
