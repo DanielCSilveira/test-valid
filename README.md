@@ -80,16 +80,24 @@ A estrutura é simples, apenas com *router* e *services*, sem modularização av
 
 ##  Setup
 
-Assumindo que nomes, usuários e portas padrão não serão alterados:
+Assumindo que nomes, usuários e portas padrão não serão alterados, a network foi criado separada (external), para facilitar utilizar a mesma estrutura porém de fora do compose:
 
-1. Execute o comando:
+1. Crie a network
+ ```bash
+    docker network create valid_network
+ ```
+
+3. Execute o comando:
    ```bash
    docker-compose up -d
    ```
-2. Serão criados os seguintes containers:
+4. Serão criados os seguintes containers:
    - **RabbitMQ**
    - **Keycloak**
    - **PostgreSQL**
+   - **front**
+   - **worker**
+   - **api**
 
 ---
 
@@ -120,12 +128,12 @@ Adicione o `valid-api` como *audience* também.
 
 | Campo | Valor |
 |--------|--------|
-| **Root URL** | http://localhost:5173/ |
-| **Home URL** | http://localhost:5173 |
-| **Valid Redirect URIs** | http://localhost:5173 |
-| **Valid Post Logout Redirect URIs** | http://localhost:5173 |
-| **Web Origins** | http://localhost:5173 |
-| **Admin URL** | http://localhost:5173/ |
+| **Root URL** | http://localhost:3000/ |
+| **Home URL** | http://localhost:3000 |
+| **Valid Redirect URIs** | http://localhost:3000/* |
+| **Valid Post Logout Redirect URIs** | http://localhost:3000/* |
+| **Web Origins** | http://localhost:3000 |
+| **Admin URL** | http://localhost:3000/ |
 
 ---
 
