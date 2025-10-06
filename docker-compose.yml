@@ -41,6 +41,52 @@ services:
     ports:
       - "8080:8080"
 
+  api:
+    build:
+      context: ./src
+      dockerfile: Api/Dockerfile
+    container_name: api
+    networks:
+      - valid_network
+    depends_on:
+      - postgres
+      - rabbitmq
+      - keycloak
+    ports:
+      - "5000:8080"
+    environment:
+      ConnectionStrings__Default: "Host=postgres;Database=db;Username=db_user;Password=db_pass"
+ 
+  worker:
+    build:
+      context: ./src
+      dockerfile: Worker/Dockerfile
+    container_name: worker
+    networks:
+      - valid_network
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      ConnectionStrings__Default: "Host=postgres;Database=db;Username=db_user;Password=db_pass"
+      Rabbit__Host: rabbitmq
+
+  web:
+    build: ./valid-front
+    container_name: front
+    depends_on:
+      - api
+      - keycloak
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: "http://localhost:5000"
+      VITE_KEYCLOAK_URL: "http://localhost:8080"
+      VITE_KEYCLOAK_REALM: "valid"
+      VITE_KEYCLOAK_CLIENT_ID: "valid-front"
+
+
+
 volumes:
   pgdata:
 
