@@ -25,7 +25,9 @@ Também foi adicionado um *pre-commit hook*, que executa os testes e o *lint* an
 ---
 
 ##  Arquitetura (ADR)
-
+ Não foi trabalhado no "legado", o entendimento da POC foi validar conhecimento, de mensageria, .net 8, pattern, docker, etc.
+ Assim sendo não criei um windows form, e não me preocupei com a geração do csv, esse poderia ser gerado em um worker, em um processo que seria disparado em um determinado status do pedido, ou diretamente em um endpoint via web-client. Mas como não foi fornecido nenhum detalhe do formato do csv não inclui na POC.
+ 
 ### **API**
  [src/Api](https://github.com/DanielCSilveira/test-valid/tree/main/src/Api)  
 Camada de apresentação do backend, com as APIs REST.  
