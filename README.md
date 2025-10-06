@@ -83,9 +83,9 @@ A estrutura é simples, apenas com *router* e *services*, sem modularização av
 Assumindo que nomes, usuários e portas padrão não serão alterados, a network foi criado separada (external), para facilitar utilizar a mesma estrutura porém de fora do compose:
 
 1. Crie a network
- ```bash
-    docker network create valid_network
- ```
+   ```bash
+      docker network create valid_network
+   ```
 
 3. Execute o comando:
    ```bash
